@@ -1,3 +1,4 @@
+import { UserRepository } from "@models/common/user.repository";
 import { Module } from "@nestjs/common";
 import { MongooseModule } from "@nestjs/mongoose";
 import { AdminRepository } from "src/models/admin/admin.repository";
@@ -12,6 +13,7 @@ import { Saller, sallerSchema } from "src/models/saller/saller.schema";
 @Module({  
     
     imports:[
+       
         MongooseModule.forFeature([
            { name:User.name , schema:userSchema ,
             discriminators:[
@@ -24,10 +26,11 @@ import { Saller, sallerSchema } from "src/models/saller/saller.schema";
         ])
     ] ,
     controllers:[] ,
-    providers:[SallerRepository , AdminRepository ,CustomerRepository ] ,
-    exports:[SallerRepository , AdminRepository ,CustomerRepository]
+    providers:[SallerRepository , AdminRepository ,CustomerRepository , UserRepository ] ,
+    exports:[SallerRepository , AdminRepository ,CustomerRepository , UserRepository]
 })
 export class UserMongoModule{
+
 
 
 

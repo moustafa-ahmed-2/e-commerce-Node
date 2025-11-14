@@ -17,9 +17,11 @@ import { User, userSchema } from './models/common/user.schema';
 import { Admin, adminSchema } from './models/admin/admin.schema';
 import { Saller, sallerSchema } from './models/saller/saller.schema';
 import { CustomerModule } from './modules/customer/customer.module';
+import { CommonModule } from '@modules/brand/common.module';
 
 @Module({
   imports: [
+    CommonModule ,
     AuthModule,
     ProductModule,
     BrandModule,

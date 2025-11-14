@@ -1,4 +1,4 @@
-import { Model, ProjectionType, QueryOptions, RootFilterQuery } from "mongoose";
+import { Model, ProjectionType, QueryOptions, RootFilterQuery, UpdateQuery } from "mongoose";
 
 
 
@@ -16,6 +16,21 @@ export class AbstractRepository<T>{
 public getOne(filter:RootFilterQuery<T> , projection?:ProjectionType<T> , options?:QueryOptions){
     return this.model.findOne(filter , projection , options)
 }
+
+
+public getAll(filter:RootFilterQuery<T> , projection?:ProjectionType<T> , options?:QueryOptions){
+    return this.model.find(filter , projection , options)
+}
+
+
+
+
+
+public updateOne(filter:RootFilterQuery<T> , updateQuery?:UpdateQuery<T>   ,   options?:QueryOptions){
+    return this.model.findOneAndUpdate(filter  , options)
+}
+
+
 
 
 }

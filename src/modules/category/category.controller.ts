@@ -1,31 +1,77 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, UseGuards, Put, Query } from '@nestjs/common';
 import { CategoryService } from './category.service';
 import { CreateCategoryDto } from './dto/create-category.dto';
 import { UpdateCategoryDto } from './dto/update-category.dto';
 
+import { User } from '@common/decorators/user.decorator';
+import { CategoryFactoryService } from './factory';
+import { AuthGuard } from '@common/guards/auth.guard';
+import { Roles } from '@common/decorators/roles.decorator';
+import { Auth } from '@common/decorators/auth.decorator';
+import { Public } from '@common/decorators/public.decorator';
+
 @Controller('category')
+
+@Auth(['Admin'])
+
+
 export class CategoryController {
-  constructor(private readonly categoryService: CategoryService) {}
+  constructor(
+    private readonly categoryService: CategoryService,
+    private readonly categoryFactoryService:CategoryFactoryService
+  
+  ) {}
 
   @Post()
-  create(@Body() createCategoryDto: CreateCategoryDto) {
-    return this.categoryService.create(createCategoryDto);
-  }
+async  create(@Body() createCategoryDto: CreateCategoryDto , @User() user:any ) {
+  const category = this.categoryFactoryService.createCategory(createCategoryDto , user)    
+  const createCategory =  await this.categoryService.create(category)
+   return{success:true , message:"category created successfully" , data:createCategory} 
+
+
+}
 
   @Get()
-  findAll() {
-    return this.categoryService.findAll();
+  findAll(@Query()  query:any) {
+    this.categoryService.findAll(query)
   }
 
+  @Public()
   @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.categoryService.findOne(+id);
+ async findOne(@Param('id') id: string) {
+    const category  = await this.categoryService.findOne(id);
+    return {
+      success:true , 
+      data:category
+    }
   }
 
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() updateCategoryDto: UpdateCategoryDto) {
-    return this.categoryService.update(+id, updateCategoryDto);
-  }
+  @Put(':id')
+
+@Put(':id')
+async update(
+  @Param('id') id: string,
+  @Body() updateCategoryDto: UpdateCategoryDto,
+  @User() user:any
+
+) {
+  
+  const category = await this.categoryFactoryService.updateCategory(id ,updateCategoryDto );
+
+  
+  const updatedCategory = await this.categoryService.update(id, category);
+
+  return {
+    success: true,
+    message: "Category updated successfully",
+    data: updatedCategory,
+  };
+}
+
+
+
+
+
 
   @Delete(':id')
   remove(@Param('id') id: string) {

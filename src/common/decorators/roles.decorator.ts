@@ -8,7 +8,8 @@ import { Reflector } from '@nestjs/core';
 
 // export const Roles = Reflector.createDecorator<string[]>();
 
-export const Roles = (value:string[])=> SetMetadata("roles" , value)
+export const ROLES = 'roles'
+export const Roles = (roles:string[])=> SetMetadata(ROLES ,roles)
 
 
 

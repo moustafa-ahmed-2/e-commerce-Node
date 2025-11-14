@@ -26,12 +26,6 @@
 
 
 
-
-
-
-
-
-
 import { Roles } from '@common/decorators/roles.decorator';
 import { Injectable, CanActivate, ExecutionContext, UnauthorizedException } from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
@@ -42,13 +36,13 @@ export class RolesGuard implements CanActivate {
 
   canActivate(context: ExecutionContext): boolean {
   
+    const publicVal =   this.reflector.get('PUBLIC' , 
+       context.getHandler() 
+    
+   )
    const request = context.switchToHttp().getRequest();
  const roles =  this.reflector.getAllAndMerge(Roles , [context.getHandler() , context.getClass()]);
  
- const publicVal =   this.reflector.get('PUBLIC' , 
-    context.getHandler() 
- 
-)
 
   if(publicVal) return true;
 

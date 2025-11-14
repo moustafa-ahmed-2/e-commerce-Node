@@ -10,6 +10,7 @@ import * as bcrypt from "bcrypt"
 import { ConfigService } from '@nestjs/config';
 import { JwtService } from '@nestjs/jwt';
 import { generateOTP } from '@models/common/helpers/otp.helper';
+import { UserRepository } from '@models/common/user.repository';
 
 @Injectable()
 
@@ -18,7 +19,7 @@ export class AuthService {
     private readonly configService:ConfigService,
     private readonly customerRepository: CustomerRepository,
     private readonly jwtService:JwtService ,
-    
+    private readonly userRepository:UserRepository
   
   
   ) { }
@@ -41,7 +42,7 @@ export class AuthService {
 
 
  async login(loginDTO:LoginDTO){
-  const customerExist =  await  this.customerRepository.getOne({email:loginDTO.email})
+  const customerExist =  await  this.userRepository.getOne({email:loginDTO.email})
   const match  = await bcrypt.compare(loginDTO.password , customerExist?.password || '') 
   
   if(!customerExist) throw new UnauthorizedException('invalid credentials')
